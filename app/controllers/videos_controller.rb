@@ -76,34 +76,7 @@ class VideosController < ApplicationController
     @current_search = params[:query]
   end
 
-  def sort_column
-    acceptable_cols = ["songs.title",
-                       "songs.artist",
-                       "songs.genre",
-                       "leaders.name",
-                       "followers.name",
-                       "channels.title",
-                       "videos.upload_date",
-                       "videos.view_count",
-                       "songs.last_name_search",
-                       "videos.popularity"]
-
-    acceptable_cols.include?(params[:sort]) ? params[:sort] : "videos.popularity"
-  end
-
-  def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
-  end
-
-  def page
-    @page ||= params.permit(:page).fetch(:page, 1).to_i
-  end
-
   def video_params
     params.require(:video).permit(:leader_id, :follower_id, :song_id, :event_id, :hidden, :id)
-  end
-
-  def filtering_params
-    params.permit(:leader, :follower, :channel, :genre, :orchestra, :song_id, :query, :hd, :event_id)
   end
 end

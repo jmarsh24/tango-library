@@ -419,6 +419,43 @@ ALTER SEQUENCE public.search_suggestions_id_seq OWNED BY public.search_suggestio
 
 
 --
+-- Name: searchjoy_searches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.searchjoy_searches (
+    id bigint NOT NULL,
+    user_id bigint,
+    search_type character varying,
+    query character varying,
+    normalized_query character varying,
+    results_count integer,
+    created_at timestamp without time zone,
+    convertable_type character varying,
+    convertable_id bigint,
+    converted_at timestamp without time zone
+);
+
+
+--
+-- Name: searchjoy_searches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.searchjoy_searches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: searchjoy_searches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.searchjoy_searches_id_seq OWNED BY public.searchjoy_searches.id;
+
+
+--
 -- Name: songs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -648,6 +685,13 @@ ALTER TABLE ONLY public.search_suggestions ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: searchjoy_searches id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.searchjoy_searches ALTER COLUMN id SET DEFAULT nextval('public.searchjoy_searches_id_seq'::regclass);
+
+
+--
 -- Name: songs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -773,6 +817,14 @@ ALTER TABLE ONLY public.search_suggestions
 
 
 --
+-- Name: searchjoy_searches searchjoy_searches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.searchjoy_searches
+    ADD CONSTRAINT searchjoy_searches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -883,6 +935,41 @@ CREATE INDEX index_playlists_on_user_id ON public.playlists USING btree (user_id
 --
 
 CREATE INDEX index_playlists_on_videos_id ON public.playlists USING btree (videos_id);
+
+
+--
+-- Name: index_searchjoy_searches_on_convertable; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searchjoy_searches_on_convertable ON public.searchjoy_searches USING btree (convertable_type, convertable_id);
+
+
+--
+-- Name: index_searchjoy_searches_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searchjoy_searches_on_created_at ON public.searchjoy_searches USING btree (created_at);
+
+
+--
+-- Name: index_searchjoy_searches_on_search_type_and_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searchjoy_searches_on_search_type_and_created_at ON public.searchjoy_searches USING btree (search_type, created_at);
+
+
+--
+-- Name: index_searchjoy_searches_on_search_type_query; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searchjoy_searches_on_search_type_query ON public.searchjoy_searches USING btree (search_type, normalized_query, created_at);
+
+
+--
+-- Name: index_searchjoy_searches_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_searchjoy_searches_on_user_id ON public.searchjoy_searches USING btree (user_id);
 
 
 --
@@ -1012,6 +1099,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210309223723'),
 ('20210309233622'),
 ('20210312174239'),
-('20210315153437');
+('20210315153437'),
+('20210326125235');
 
 

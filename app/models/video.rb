@@ -121,6 +121,14 @@ class Video < ApplicationRecord
   scope :title_match_missing_follower, ->(follower_name) { missing_follower.with_dancer_name_in_title(follower_name) }
 
   class << self
+    def self.search(query, options = {})
+      Search::InMemory.new.search(@records, query, options)
+    end
+
+    def self.facets(collection, query, search_options)
+      Search::InMemory.new.facets(collection, query, search_options)
+    end
+
     # Filters videos by the results from the materialized
     # full text search out of from VideosSearch
     def filter_by_query(query)

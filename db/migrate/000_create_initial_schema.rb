@@ -238,6 +238,7 @@ class CreateInitialSchema < ActiveRecord::Migration[6.1]
       t.index ["youtube_id"], name: "index_videos_on_youtube_id"
       t.index ["youtube_song"], name: "index_videos_on_youtube_song"
     end
+  
     add_foreign_key "playlists", "users"
     add_foreign_key "playlists", "videos", column: "videos_id"
     add_foreign_key "videos", "events"

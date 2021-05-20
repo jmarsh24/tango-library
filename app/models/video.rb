@@ -1,6 +1,23 @@
 class Video < ApplicationRecord
   include Filterable
 
+  SEARCHABLE_COLUMNS = %w[channels.title
+                        followers.name
+                        leaders.name
+                        songs.genre
+                        songs.title
+                        songs.artist
+                        videos.acr_cloud_track_name
+                        videos.acr_cloud_artist_name
+                        videos.description
+                        videos.title
+                        videos.youtube_artist
+                        videos.youtube_id
+                        videos.youtube_song
+                        videos.spotify_artist_name
+                        videos.spotify_track_name
+                        videos.tags].freeze
+
   validates :youtube_id, presence: true, uniqueness: true
 
   belongs_to :leader, optional: true, counter_cache: true
@@ -97,10 +114,43 @@ class Video < ApplicationRecord
         }
 
   class << self
-    # Filters videos by the results from the materialized
-    # full text search out of from VideosSearch
-    def filter_by_query(query)
-      where(id: VideosSearch.search(query).select(:video_id))
+    def filter_by_query(query_string)
+      sql_query_array = []
+      keywords_array_without_stop_words = keywords_array_without_stop_words(query_string)
+      keywords_array_without_stop_words.each do |keyword|
+        sql_query_array.push(sql_query(keyword))
+      end
+      left_outer_joins(:song, :leader, :follower, :channel).where(combined_sql_queries(sql_query_array))
+    end
+
+    private
+
+    def stop_words
+      %w[and or the a an of to " ']
+    end
+
+    def stop_words_regex
+      "/\b(#{stop_words.join('|')})\b/"
+    end
+
+    def keywords_array_without_stop_words(query_string)
+      query_string.gsub(stop_words_regex, "").gsub("'", "").to_s.strip.split
+    end
+
+    def searchable_column_ignoring_apostrophe(searchable_column)
+      "REPLACE(#{searchable_column},'''','')"
+    end
+
+    def combined_sql_queries(sql_query_array)
+      sql_query_array.flatten.join(") AND (")
+    end
+
+    def sql_query(keyword)
+      sql_query = []
+      SEARCHABLE_COLUMNS.each do |searchable_column|
+        sql_query.push("unaccent(#{searchable_column_ignoring_apostrophe(searchable_column)}) ILIKE unaccent('%#{keyword}%')")
+      end
+      sql_query.join(" OR ")
     end
   end
 

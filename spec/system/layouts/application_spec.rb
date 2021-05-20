@@ -64,7 +64,6 @@ RSpec.describe "Videos::Index", type: :system do
     leader = create(:leader, name: "Leader Name")
     @video = create(:video, :display, title: "expected_result", popularity: "1", leader: leader)
     create(:video, :display, title: "video_b", popularity: "2")
-    VideosSearch.refresh
   end
 
   def shows_page_navigation

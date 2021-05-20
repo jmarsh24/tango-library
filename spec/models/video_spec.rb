@@ -67,7 +67,7 @@ RSpec.describe Video, type: :model do
       end
     end
 
-    describe ".filter_by_follower_id" do
+    describe ".filter_by_follower" do
       it "returns videos with matching follower" do
         follower = create(:follower)
         video = create(:video, follower: follower)
@@ -554,68 +554,38 @@ RSpec.describe Video, type: :model do
 
     describe ".filter_by_query" do
       it "returns video with title that matches query" do
-        video = create(:video, title: "Title with carlitos espinoza")
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Carlitos Espinoza")).to eq [
-             video
-           ]
+        video = create(:video, title: "Title with Carlitos Espinoza")
+        expect(described_class.filter_by_query("carlitos espinoza")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Carlitos Espin")).to eq [video]
+        expect(described_class.filter_by_query("carlitos espin")).to eq [video]
       end
 
       it "returns video with description that matches query" do
-        video =
-          create(:video, description: "description with carlitos espinoza")
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Carlitos Espinoza")).to eq [
-             video
-           ]
+        video = create(:video, description: "description with carlitos espinoza")
+        expect(described_class.filter_by_query("carlitos espinoza")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Carlitos Espin")).to eq [video]
+        expect(described_class.filter_by_query("carlitos espin")).to eq [video]
       end
 
       it "returns video with leader name that matches query" do
         leader = create(:leader, name: "Carlitos Espinoza")
         video = create(:video, leader: leader)
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Carlitos Espinoza")).to eq [
-             video
-           ]
+        expect(described_class.filter_by_query("carlitos espinoza")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Carlitos Espin")).to eq [video]
-      end
-
-      it "returns video with leader nickname that matches query" do
-        leader = create(:leader, nickname: "Carlitos")
-        video = create(:video, leader: leader)
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Carlitos")).to eq [video]
-        expect(described_class.filter_by_query("No Match")).not_to eq [video]
-        expect(described_class.filter_by_query("Carli")).to eq [video]
+        expect(described_class.filter_by_query("carlitos espin")).to eq [video]
       end
 
       it "returns video with follower name that matches query" do
         follower = create(:follower, name: "Noelia Hurtado")
         video = create(:video, follower: follower)
-        VideosSearch.refresh
 
-        expect(described_class.filter_by_query("Noelia Hurtado")).to eq [video]
+        expect(described_class.filter_by_query("noelia hurtado")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("noeli")).to eq [video]
       end
 
-      it "returns video with follower nickname that matches query" do
-        follower = create(:follower, nickname: "Noelia")
-        video = create(:video, follower: follower)
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Noelia")).to eq [video]
-        expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Noel")).to eq [video]
-      end
-
       it "returns video with youtube_id that matches query" do
         video = create(:video, youtube_id: "s6iptZdCcG0")
-        VideosSearch.refresh
         expect(described_class.filter_by_query("s6iptZdCcG0")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("s6iptZdCcG")).to eq [video]
@@ -623,62 +593,64 @@ RSpec.describe Video, type: :model do
 
       it "returns video with youtube_artist that matches query" do
         video = create(:video, youtube_artist: "Angel D'Agostino")
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("Agostino")).to eq [video]
+        expect(described_class.filter_by_query("agostino")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Agostin")).to eq [video]
+        expect(described_class.filter_by_query("agostin")).to eq [video]
       end
 
       it "returns video with youtube_song that matches query" do
         video = create(:video, youtube_song: "No Vendrá")
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("no vendrá")).to eq [video]
+        expect(described_class.filter_by_query("no vendra")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("no vend")).to eq [video]
       end
 
       it "returns video with spotify_track_name that matches query" do
         video = create(:video, spotify_track_name: "No Vendrá")
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("no vendrá")).to eq [video]
+        expect(described_class.filter_by_query("no vendra")).to eq [video]
+        expect(described_class.filter_by_query("John Doe")).not_to eq [video]
+        expect(described_class.filter_by_query("no vend")).to eq [video]
+      end
+
+      it "returns video with spotify_track_name that matches query" do
+        video = create(:video, acr_cloud_artist_name: "Angel D'Agostino")
+        expect(described_class.filter_by_query("agostino")).to eq [video]
+        expect(described_class.filter_by_query("John Doe")).not_to eq [video]
+        expect(described_class.filter_by_query("Angel DAgosti")).to eq [video]
+      end
+
+      it "returns video with acr_cloud_track_name that matches query" do
+        video = create(:video, acr_cloud_track_name: "No Vendrá")
+        expect(described_class.filter_by_query("no vendra")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("no vend")).to eq [video]
       end
 
       it "returns video with spotify_artist_name that matches query" do
         video = create(:video, spotify_artist_name: "Angel D'Agostino")
-        VideosSearch.refresh
         expect(described_class.filter_by_query("agostino")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("Angel D'Agosti")).to eq [video]
+        expect(described_class.filter_by_query("Angel DAgosti")).to eq [video]
+      end
+
+      it "returns video with tags that matches query" do
+        video = create(:video, tags: "[\"tango\", \"Angel D'Agostino\"]")
+        expect(described_class.filter_by_query("agostino")).to eq [video]
+        expect(described_class.filter_by_query("John Doe")).not_to eq [video]
+        expect(described_class.filter_by_query("Angel DAgosti")).to eq [video]
       end
 
       it "returns video with channel title that matches query" do
         channel = create(:channel, title: "030 Tango")
         video = create(:video, channel: channel)
-        VideosSearch.refresh
         expect(described_class.filter_by_query("030 tango")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("030 T")).to eq [video]
       end
 
-      it "returns video with channel_id that matches query" do
-        channel = create(:channel, channel_id: "UCtdgMR0bmogczrZNpPaO66Q")
-        video = create(:video, channel: channel)
-        VideosSearch.refresh
-        expect(
-          described_class.filter_by_query("UCtdgMR0bmogczrZNpPaO66Q")
-        ).to eq [video]
-        expect(described_class.filter_by_query("John Doe")).not_to eq [video]
-        expect(described_class.filter_by_query("UCtdgMR0bmogczrZNpPaO")).to eq [
-             video
-           ]
-      end
-
       it "returns video with song genre that matches query" do
         song = create(:song, genre: "Tango")
         video = create(:video, song: song)
-        VideosSearch.refresh
         expect(described_class.filter_by_query("tango")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("tang")).to eq [video]
@@ -687,7 +659,6 @@ RSpec.describe Video, type: :model do
       it "returns video with song title that matches query" do
         song = create(:song, title: "La Mentirosa")
         video = create(:video, song: song)
-        VideosSearch.refresh
         expect(described_class.filter_by_query("mentirosa")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("menti")).to eq [video]
@@ -696,8 +667,7 @@ RSpec.describe Video, type: :model do
       it "returns video with song artist that matches query" do
         song = create(:song, artist: "Angel D'Agostino")
         video = create(:video, song: song)
-        VideosSearch.refresh
-        expect(described_class.filter_by_query("d'agostino")).to eq [video]
+        expect(described_class.filter_by_query("dagostino")).to eq [video]
         expect(described_class.filter_by_query("John Doe")).not_to eq [video]
         expect(described_class.filter_by_query("Agosti")).to eq [video]
       end

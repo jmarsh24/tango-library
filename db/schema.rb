@@ -86,7 +86,6 @@ ActiveRecord::Schema.define(version: 2021_04_28_220252) do
     t.integer "yt_api_pull_count", default: 0
     t.boolean "reviewed", default: false
     t.integer "videos_count", default: 0, null: false
-    t.index ["title"], name: "index_channels_on_title"
   end
 
   create_table "events", force: :cascade do |t|
@@ -171,7 +170,6 @@ ActiveRecord::Schema.define(version: 2021_04_28_220252) do
     t.integer "videos_count", default: 0, null: false
     t.index ["artist"], name: "index_songs_on_artist"
     t.index ["genre"], name: "index_songs_on_genre"
-    t.index ["last_name_search"], name: "index_songs_on_last_name_search"
     t.index ["title"], name: "index_songs_on_title"
   end
 
@@ -226,30 +224,16 @@ ActiveRecord::Schema.define(version: 2021_04_28_220252) do
     t.bigint "event_id"
     t.boolean "scanned_youtube_music", default: false
     t.integer "click_count", default: 0
-    t.string "spotify_artist_id_1"
-    t.string "spotify_artist_name_1"
     t.string "acr_cloud_artist_name"
     t.string "acr_cloud_artist_name_1"
     t.string "acr_cloud_album_name"
     t.string "acr_cloud_track_name"
-    t.index ["acr_cloud_artist_name"], name: "index_videos_on_acr_cloud_artist_name"
-    t.index ["acr_cloud_track_name"], name: "index_videos_on_acr_cloud_track_name"
     t.index ["channel_id"], name: "index_videos_on_channel_id"
     t.index ["event_id"], name: "index_videos_on_event_id"
     t.index ["follower_id"], name: "index_videos_on_follower_id"
-    t.index ["hd"], name: "index_videos_on_hd"
-    t.index ["hidden"], name: "index_videos_on_hidden"
     t.index ["leader_id"], name: "index_videos_on_leader_id"
-    t.index ["popularity"], name: "index_videos_on_popularity"
     t.index ["song_id"], name: "index_videos_on_song_id"
-    t.index ["spotify_artist_name"], name: "index_videos_on_spotify_artist_name"
-    t.index ["spotify_track_name"], name: "index_videos_on_spotify_track_name"
-    t.index ["tags"], name: "index_videos_on_tags"
-    t.index ["upload_date"], name: "index_videos_on_upload_date"
-    t.index ["view_count"], name: "index_videos_on_view_count"
-    t.index ["youtube_artist"], name: "index_videos_on_youtube_artist"
     t.index ["youtube_id"], name: "index_videos_on_youtube_id"
-    t.index ["youtube_song"], name: "index_videos_on_youtube_song"
   end
 
   add_foreign_key "playlists", "users"

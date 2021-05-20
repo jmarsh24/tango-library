@@ -10,9 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_02_054037) do
+ActiveRecord::Schema.define(version: 2021_04_28_220252) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "fuzzystrmatch"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
   enable_extension "unaccent"
 
@@ -236,7 +238,7 @@ ActiveRecord::Schema.define(version: 2021_05_02_054037) do
     t.index ["event_id"], name: "index_videos_on_event_id"
     t.index ["follower_id"], name: "index_videos_on_follower_id"
     t.index ["hd"], name: "index_videos_on_hd"
-    t.index ["hidden"], name: "index_videos_on_hidden", where: "(hidden IS FALSE)"
+    t.index ["hidden"], name: "index_videos_on_hidden"
     t.index ["leader_id"], name: "index_videos_on_leader_id"
     t.index ["popularity"], name: "index_videos_on_popularity"
     t.index ["song_id"], name: "index_videos_on_song_id"
@@ -250,4 +252,7 @@ ActiveRecord::Schema.define(version: 2021_05_02_054037) do
     t.index ["youtube_song"], name: "index_videos_on_youtube_song"
   end
 
+  add_foreign_key "playlists", "users"
+  add_foreign_key "playlists", "videos", column: "videos_id"
+  add_foreign_key "videos", "events"
 end

@@ -1,8 +1,8 @@
 class Video::Search
-  SEARCHABLE_COLUMNS = %w[
+  SORTABLE_COLUMNS = %w[
     songs.title
     songs.last_name_search
-    videos.channel_id
+    channels.title
     videos.upload_date
     videos.view_count
     videos.updated_at
@@ -75,11 +75,7 @@ class Video::Search
   end
 
   def sort_column
-    if SEARCHABLE_COLUMNS.include?(@sorting_params[:sort])
-      @sorting_params[:sort]
-    else
-      SEARCHABLE_COLUMNS.last
-    end
+    SORTABLE_COLUMNS.include?(@sorting_params[:sort]) ? @sorting_params[:sort] : SORTABLE_COLUMNS.last
   end
 
   def sort_direction

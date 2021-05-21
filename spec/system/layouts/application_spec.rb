@@ -16,15 +16,8 @@ RSpec.describe "Videos::Index", type: :system do
       add_new_channel
       add_new_playlist
       edit_user_page
-      open_filters
       performs_a_search
       performs_autocomplete_search
-      reset_page
-      open_filters
-      select_leader_filter
-      close_filters
-      select_video
-      shows_edit_button
       logout
     end
   end
@@ -45,13 +38,8 @@ RSpec.describe "Videos::Index", type: :system do
       add_new_channel
       add_new_playlist
       edit_user_page
-      open_filters
       performs_a_search
       performs_autocomplete_search
-      reset_page
-      open_filters
-      select_leader_filter
-      close_filters
       logout
     end
   end
@@ -62,9 +50,14 @@ RSpec.describe "Videos::Index", type: :system do
 
   def set_up_videos
     leader = create(:leader, name: "Leader Name")
-    @video = create(:video, :display, title: "expected_result", popularity: "1", leader: leader)
+    create(
+      :video,
+      :display,
+      title: "expected_result",
+      popularity: "1",
+      leader: leader
+    )
     create(:video, :display, title: "video_b", popularity: "2")
-    VideosSearch.refresh
   end
 
   def shows_page_navigation
@@ -126,14 +119,6 @@ RSpec.describe "Videos::Index", type: :system do
     click_on("Log in")
 
     expect(page).to have_content("Signed in successfully.")
-  end
-
-  def select_video
-    find("a#video-link").click
-  end
-
-  def shows_edit_button
-    expect(page).to have_link("Edit", href: edit_video_path(@video))
   end
 
   def shows_page_registrations_new
@@ -202,7 +187,7 @@ RSpec.describe "Videos::Index", type: :system do
     expect(page).to have_content("Current password")
 
     expect(page).to have_content("Cancel my account")
-    visit root_path
+    click_on("Back")
   end
 
   def forgot_your_password_page
@@ -221,19 +206,8 @@ RSpec.describe "Videos::Index", type: :system do
     )
   end
 
-  def open_filters
-    find(class: "filter-button").click
-    expect(page).to have_css("div.filter-container", visible: :all)
-  end
-
-  def close_filters
-    find(class: "filter-button").click
-    expect(page).to have_css("div.filter-container.isHidden", visible: :all)
-  end
-
   def performs_a_search
-    find("button", text: "Popularity").click
-    expect(page).to have_current_path("/?sort=videos.popularity&direction=asc")
+    click_on("Popularity")
     expect(video_title_collection).to eq(%w[expected_result video_b])
     fill_in("query", with: "expected_result")
     click_on(class: "searchButton")
@@ -251,20 +225,8 @@ RSpec.describe "Videos::Index", type: :system do
     expect(video_title_collection).to eq(%w[expected_result])
   end
 
-  def reset_page
-    click_on("TangoTube")
-    expect(video_title_collection).to eq(%w[expected_result video_b])
-    expect(page).to have_current_path("/")
-  end
-
-  def select_leader_filter
-    find("div.ss-option", text: "Leader Name (1)").click
-    expect(page).to have_current_path("/?leader_id=#{@leader.id}")
-    expect(video_title_collection).to eq(["expected_result"])
-  end
-
   def logout
-    all(class: "navbar-link", text: "Logout").last.click
+    click_on "Logout"
     expect(page).to have_content("Signed out successfully.")
   end
 end

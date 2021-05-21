@@ -1,12 +1,11 @@
-<div class="filter" data-toggle-target="disableable">
+<div class="filter">
   <%= select_tag title.to_s,
         options_for_select(options, params[title.to_s].presence), { include_blank: true,
                                                                   multiple: false,
-                                                                  data: { action: "filter#filter toggle#disableFilters",
+                                                                  data: { action: "filter#filter",
                                                                           "filter-target": "filter",
                                                                           controller: 'slimselect',
-                                                                          "slimselect-placeholder-value": "Search #{title.to_s.titleize.pluralize}",
-                                                                           },
+                                                                          "slimselect-placeholder-value": "Search #{title.to_s.titleize.pluralize}" },
                                                                   class: 'select-filter',
                                                                   id: id } %>
 </div>

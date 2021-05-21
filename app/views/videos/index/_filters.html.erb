@@ -10,29 +10,41 @@
         <% end %>
       </div>
     </div>
-    <div class="filter-hd">
-      <%= button_tag "All", class: "filter-hd-button", data: { controller: "filter", action: "filter#filter", "filter-hd-value": "0" } %>
-      <%= button_tag "HD", class: "filter-hd-button", data: { controller: "filter", action: "filter#filter", "filter-hd-value": "1" } %>
+    <div class="filter-hd" id="hd_filters">
+      <%= link_to "All", video_query_params.except(:hd), { class: "filter-hd-button", data: { action: "filter#filter", "filter-target": "filter" } } %>
+      <%= link_to "HD", video_query_params.merge(hd: 1), { class: "filter-hd-button", data: { action: "filter#filter", "filter-target": "filter" } } %>
     </div>
   </div>
-  <div class="filter-container" data-toggle-target="toggleable" id="filter-container">
-    <div class="filter-container-upper">
+  <div class="filter-container" data-toggle-target="toggleable" id="filters">
+    <div class="filter-container-upper" id="filter-container-upper">
       <%= render partial: "videos/index/filter", locals: { options: @search.genres, title: :genre, id: 'genre-filter' } %>
       <%= render partial: "videos/index/filter", locals: { options: @search.leaders, title: :leader, id: 'leader-filter' } %>
       <%= render partial: "videos/index/filter", locals: { options: @search.followers, title: :follower, id: 'follower-filter' } %>
       <%= render partial: "videos/index/filter", locals: { options: @search.orchestras, title: :orchestra, id: 'orchestra-filter' } %>
       <%= render partial: "videos/index/filter", locals: { options: @search.years, title: :year, id: 'year-filter' } %>
     </div>
-    <div class="videos-sortable-container">
+    <div class="videos-sortable-container" id= "sortable_container">
       <label>
         Sort By
       </label>
+      <div class="videos-sortable-button">
         <%= sortable 'songs.title', "Song Title", @search %>
+      </div>
+      <div class="videos-sortable-button">
         <%= sortable 'songs.last_name_search', "Orchestra", @search %>
+      </div>
+      <div class="videos-sortable-button">
         <%= sortable 'videos.channel_id', "Channel", @search %>
+      </div>
+      <div class="videos-sortable-button">
         <%= sortable "videos.view_count", "View Count", @search %>
+      </div>
+      <div class="videos-sortable-button">
         <%= sortable "videos.upload_date", "Upload Date", @search %>
+      </div>
+      <div class="videos-sortable-button">
         <%= sortable 'videos.popularity', "Popularity", @search %>
+      </div>
     </div>
   </div>
 </div>

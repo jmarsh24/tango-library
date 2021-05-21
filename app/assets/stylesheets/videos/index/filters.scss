@@ -82,7 +82,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  z-index: 10;
 
   #form-frame {
     flex: 1;
@@ -119,12 +118,10 @@
 
 .videos-sortable-container {
   display: flex;
-  height: 32px;
+  height: 2rem;
   font-size: 0.7rem;
   align-items: center;
-  padding: 0 5px;
-  margin: 5px 0;
-
+  padding: 0 1em;
   min-width: 1000px;
   label {
     font-size: 0.9rem;
@@ -132,6 +129,7 @@
     min-width: 50px;
     color: $sortable-label-color;
   }
+
   a {
     text-decoration: none;
     color: $primary-font-color;
@@ -146,23 +144,13 @@
 
 .videos-sortable-button {
   display: flex;
-  color: rgb(96, 96, 96);
+  color: $primary-color;
   justify-content: center;
-  align-items: center;
-  border: 1px solid $border-color-secondary;
-  background: $button-primary-background-color;
   font-size: 0.8rem;
   margin: 0 5px;
-  border-radius: 2px;
-  padding: 5px 12px;
-  height: 32px;
-  cursor: pointer;
-  &:hover {
-    color: $sortable-label-color-hover;
-  }
-  .videos-sortable-icon {
-    padding-left: 5px;
-    font-size: 1rem;
+  min-width: 100px;
+  svg {
+    font-size: 0.7rem;
     color: $sortable-label-color;
   }
 }
@@ -177,6 +165,7 @@
   }
 
   .filter-container {
+    height: 315px;
     overflow-x: auto;
     margin-bottom: 0;
     padding: 0 5px;
@@ -189,12 +178,13 @@
 
   .videos-sortable-container {
     min-width: 700px;
-    button {
-      min-width: 100px;
+    a {
+      min-width: 80px;
+      font-size: 0.7rem;
     }
   }
   .videos-sortable-button {
-    margin: 0 2.5px;
-    min-width: 100px;
+    margin: 0 10px;
+    min-width: 80px;
   }
 }

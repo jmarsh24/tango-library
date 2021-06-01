@@ -7,7 +7,7 @@ gem "bootsnap", "1.4.6", require: false
 gem "spring", "2.1.0"
 gem "rails", "~> 6.1"
 gem "redis", "~> 4.2", ">= 4.2.5"
-gem "puma", "4.3.5"
+gem "puma", "4.3.8"
 gem "pg", "1.2.3"
 gem "webpacker", "4.2.2"
 gem "barnes", "~> 0.0.9"
